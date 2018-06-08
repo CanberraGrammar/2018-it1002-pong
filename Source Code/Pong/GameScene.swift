@@ -10,6 +10,10 @@ import SpriteKit
 
 class GameScene: SKScene {
     
+    let BallCategory: UInt32 = 0x1 << 0
+    let BottomCategory: UInt32 = 0x1 << 1
+    let TopCategory: UInt32 = 0x1 << 2
+    
     var topPaddle: SKSpriteNode?
     var bottomPaddle: SKSpriteNode?
     
@@ -35,6 +39,8 @@ class GameScene: SKScene {
         ball!.physicsBody!.linearDamping = 0.0
         ball!.physicsBody!.angularDamping = 0.0
         ball!.physicsBody!.allowsRotation = false
+        ball!.physicsBody!.categoryBitMask = BallCategory
+        ball!.physicsBody!.contactTestBitMask = TopCategory | BottomCategory
         
         // Configure the physics world
         // self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
@@ -49,11 +55,13 @@ class GameScene: SKScene {
         // Top node
         let topNode = SKNode()
         topNode.physicsBody = SKPhysicsBody(edgeFrom: topLeftPoint, to: topRightPoint)
+        topNode.physicsBody!.categoryBitMask = TopCategory
         addChild(topNode)
         
         // Bottom node
         let bottomNode = SKNode()
         bottomNode.physicsBody = SKPhysicsBody(edgeFrom: bottomLeftPoint, to: bottomRightPoint)
+        bottomNode.physicsBody!.categoryBitMask = BottomCategory
         addChild(bottomNode)
         
     }
