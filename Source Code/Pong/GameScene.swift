@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let BallCategory: UInt32 = 0x1 << 0
     let BottomCategory: UInt32 = 0x1 << 1
@@ -21,6 +21,8 @@ class GameScene: SKScene {
     var fingerOnBottomPaddle: Bool = false
     
     var ball: SKSpriteNode?
+    
+    var gameRunning: Bool = false
     
     override func didMove(to view: SKView) {
         
@@ -43,8 +45,9 @@ class GameScene: SKScene {
         ball!.physicsBody!.contactTestBitMask = TopCategory | BottomCategory
         
         // Configure the physics world
-        // self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        physicsWorld.contactDelegate = self
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         
         // Points
         let topLeftPoint = CGPoint(x: -(size.width / 2), y: size.height / 2)
@@ -78,6 +81,14 @@ class GameScene: SKScene {
         
         if touchedNode.name == "bottomPaddle" {
             fingerOnBottomPaddle = true
+        }
+        
+        if gameRunning == false {
+            
+            ball!.physicsBody!.applyImpulse(CGVector(dx: 5, dy: 5))
+            
+            gameRunning = true
+
         }
         
     }
@@ -124,4 +135,33 @@ class GameScene: SKScene {
         // Called before each frame is rendered
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        if (contact.bodyA.categoryBitMask == TopCategory) || (contact.bodyB.categoryBitMask == TopCategory) {
+            print("Top Contact")
+        }
+        
+        else if (contact.bodyA.categoryBitMask == BottomCategory) || (contact.bodyB.categoryBitMask == BottomCategory) {
+            print("Bottom Contact")
+        }
+        
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
