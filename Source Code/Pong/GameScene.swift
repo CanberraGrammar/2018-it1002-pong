@@ -17,12 +17,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var topPaddle: SKSpriteNode?
     var bottomPaddle: SKSpriteNode?
     
+    var topScore: SKLabelNode?
+    var bottomScore: SKLabelNode?
+    
     var fingerOnTopPaddle: Bool = false
     var fingerOnBottomPaddle: Bool = false
     
     var ball: SKSpriteNode?
     
     var gameRunning: Bool = false
+    
+    var topScoreCount: Int = 0
+    var bottomScoreCount: Int = 0
     
     override func didMove(to view: SKView) {
         
@@ -33,6 +39,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bottomPaddle = self.childNode(withName: "bottomPaddle") as? SKSpriteNode
         bottomPaddle!.physicsBody = SKPhysicsBody(rectangleOf: bottomPaddle!.frame.size)
         bottomPaddle!.physicsBody!.isDynamic = false
+        
+        topScore = self.childNode(withName: "topScore") as? SKLabelNode
+        bottomScore = self.childNode(withName: "bottomScore") as? SKLabelNode
         
         ball = self.childNode(withName: "ball") as? SKSpriteNode
         ball!.physicsBody = SKPhysicsBody(rectangleOf: ball!.frame.size)
@@ -193,6 +202,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             print("Top Contact")
             
+            bottomScoreCount += 1
+            bottomScore!.text = String(bottomScoreCount)
+            
             gameOver()
             
         }
@@ -200,6 +212,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         else if (contact.bodyA.categoryBitMask == BottomCategory) || (contact.bodyB.categoryBitMask == BottomCategory) {
             
             print("Bottom Contact")
+            
+            topScoreCount += 1
+            topScore!.text = String(topScoreCount)
             
             gameOver()
             
